@@ -1,0 +1,8 @@
+services:
+  pdf-printer:
+    build: .
+    container_name: pdf-printer
+    restart: always
+    volumes:
+      - ./files:/files
+      - /var/run/cups:/var/run/cups
