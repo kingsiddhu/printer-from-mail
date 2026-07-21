@@ -1,8 +1,23 @@
 services:
-  pdf-printer:
-    build: .
-    container_name: pdf-printer
-    restart: always
+  converter:
+    build: ./converter
+    restart: unless-stopped
+    networks:
+      - printnet
+
+  mailbot:
+    build: ./mailbot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - CONVERTER_URL=http://192.168.1.2:5000/convert
     volumes:
-      - ./files:/files
-      - /var/run/cups:/var/run/cups
+      - ./files:/app/files
+      - /var/run/cups/cups.sock:/var/run/cups/cups.sock
+    networks:
+      - printnet
+
+networks:
+  printnet:
+    driver: bridge
